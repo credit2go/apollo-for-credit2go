@@ -15,11 +15,14 @@ def preCompile(stepTimeout) {
 //编译后
 def postCompile(stepTimeout) {
     //main function here
-    stage('发布自定义apollo-client'){
+    stage('发布自定义apollo-client') {
         container('maven') {
-            String version = readMavenPom(file: 'pom.xml').getVersion()
-            String commandDeploy = 'mvn -B -V -U -e -amd clean deploy ' + '-Dapollo.client.version=' + version
-            sh commandDeploy
+            dir('apollo-client-credit2go') {
+                String version = readMavenPom(file: 'pom.xml').getVersion()
+                String commandDeploy = 'mvn -B -V -U -e -amd clean deploy ' + '-Dapollo.client.version=' + version
+                sh commandDeploy
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/*.jar', fingerprint: true, onlyIfSuccessful: true
+            }
         }
     }
 }
