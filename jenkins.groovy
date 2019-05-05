@@ -17,8 +17,8 @@ def postCompile(stepTimeout) {
     //main function here
     stage('发布自定义apollo-client') {
         container('maven') {
+            String version = readMavenPom(file: 'pom.xml').getVersion()
             dir('apollo-client-credit2go') {
-                String version = readMavenPom(file: 'pom.xml').getVersion()
                 //replace version
                 sh 'sed -i \'s/${apollo.client.version}/' + version + '/g\' pom.xml'
                 String commandDeploy = 'mvn -B -V -U -e -amd clean deploy ' + '-Dapollo.client.version=' + version
