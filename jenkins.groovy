@@ -19,6 +19,8 @@ def postCompile(stepTimeout) {
         container('maven') {
             dir('apollo-client-credit2go') {
                 String version = readMavenPom(file: 'pom.xml').getVersion()
+                //replace version
+                sh 'sed -i \'s/${apollo.client.version}/' + version + '/g\' pom.xml'
                 String commandDeploy = 'mvn -B -V -U -e -amd clean deploy ' + '-Dapollo.client.version=' + version
                 sh commandDeploy
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/*.jar', fingerprint: true, onlyIfSuccessful: true
